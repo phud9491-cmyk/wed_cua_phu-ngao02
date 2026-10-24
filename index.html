@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppStore Premium - Kho Ứng Dụng & Tài Khoản Giá Rẻ Uy Tín</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            neon: '#a855f7',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & Font Awesome Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.4);
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="filterCategory('all')">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-purple-500/30">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent">AppVault</span>
+                        <span class="text-xs text-purple-400 font-semibold block -mt-1 tracking-wider uppercase">Premium Store</span>
+                    </div>
+                </div>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-md mx-6 relative">
+                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Tìm kiếm Netflix, Spotify, Canva, Apple ID..." 
+                        class="w-full bg-slate-800/80 text-sm text-slate-200 placeholder-slate-400 rounded-full py-2.5 pl-10 pr-4 border border-slate-700/60 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                </div>
+
+                <!-- Navigation Links & Cart -->
+                <div class="flex items-center gap-4">
+                    <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                        <button onclick="scrollToSection('products-section')" class="hover:text-purple-400 transition-colors">Sản phẩm</button>
+                        <button onclick="scrollToSection('benefits-section')" class="hover:text-purple-400 transition-colors">Ưu đãi & Cam kết</button>
+                        <button onclick="scrollToSection('reviews-section')" class="hover:text-purple-400 transition-colors">Đánh giá</button>
+                    </nav>
+
+                    <!-- Cart Button -->
+                    <button onclick="toggleCartModal()" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 p-2.5 sm:px-4 sm:py-2.5 rounded-full flex items-center gap-2 border border-slate-700/80 transition-all hover:border-purple-500/50">
+                        <i class="fa-solid fa-cart-shopping text-purple-400 text-base"></i>
+                        <span class="hidden sm:inline text-sm font-semibold">Giỏ hàng</span>
+                        <span id="cartBadge" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full h-5 min-w-[20px] px-1.5 flex items-center justify-center border-2 border-slate-900">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="pb-3 md:hidden">
+                <div class="relative">
+                    <input type="text" id="mobileSearchInput" oninput="handleMobileSearch()" placeholder="Tìm ứng dụng, ID game..." 
+                        class="w-full bg-slate-800 text-sm text-slate-200 placeholder-slate-400 rounded-full py-2 pl-9 pr-4 border border-slate-700 focus:outline-none focus:border-purple-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-12 md:py-20 border-b border-slate-800/60">
+        <!-- Background Blur Orbs -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[300px] h-[300px] bg-cyan-600/15 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-950/80 text-purple-300 border border-purple-500/30 mb-6">
+                    <i class="fa-solid fa-shield-halved text-purple-400"></i> Kích hoạt tự động - Bảo hành trọn đời gói
+                </span>
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                    Kho Ứng Dụng <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">Premium</span> & Tài Khoản Giá Rẻ
+                </h1>
+                <p class="mt-4 text-base sm:text-lg text-slate-300 font-normal max-w-2xl mx-auto">
+                    Thuê & Mua bản quyền Netflix, Spotify, Canva Pro, CapCut, Apple ID tải App/Game trả phí giá tiết kiệm đến 80%. Tự động nhận tài khoản chỉ sau 30s.
+                </p>
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+                    <button onclick="scrollToSection('products-section')" class="px-7 py-3.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 hover:scale-105 transition-all">
+                        <i class="fa-solid fa-store mr-2"></i> Khám phá sản phẩm
+                    </button>
+                    <a href="#benefits-section" class="px-7 py-3.5 rounded-full glass-card text-slate-200 font-semibold hover:bg-slate-800 transition-all border border-slate-700">
+                        <i class="fa-solid fa-circle-info mr-2 text-cyan-400"></i> Xem bảng cam kết
+                    </a>
+                </div>
+
+                <!-- Stats Badges -->
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-800/80 text-center">
+                    <div>
+                        <p class="text-2xl font-bold text-white">15.000+</p>
+                        <p class="text-xs text-slate-400 mt-1">Khách hàng tin dùng</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white">100%</p>
+                        <p class="text-xs text-slate-400 mt-1">Tài khoản chính hãng</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white">30 Giây</p>
+                        <p class="text-xs text-slate-400 mt-1">Giao hàng tự động</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white">24/7</p>
+                        <p class="text-xs text-slate-400 mt-1">Hỗ trợ kỹ thuật</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN PRODUCT SECTION -->
+    <main id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        
+        <!-- Category Filter Tabs -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-amber-500"></i> Danh Sách Sản Phẩm & Dịch Vụ
+                </h2>
+                <p class="text-sm text-slate-400 mt-1">Chọn danh mục bạn cần tìm kiếm bên dưới</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+                <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-purple-600 text-white whitespace-nowrap" data-cat="all">Tất cả</button>
+                <button onclick="filterCategory('entertainment')" class="cat-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap" data-cat="entertainment">Giải Trí</button>
+                <button onclick="filterCategory('work')" class="cat-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap" data-cat="work">Học Tập & Công Cụ</button>
+                <button onclick="filterCategory('design')" class="cat-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap" data-cat="design">Thiết Kế / Video</button>
+                <button onclick="filterCategory('appleid')" class="cat-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap" data-cat="appleid">Thuê Apple ID / App Game</button>
+            </div>
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Dynamic JavaScript Render Products -->
+        </div>
+
+        <!-- No Result Message -->
+        <div id="noResults" class="hidden text-center py-16">
+            <i class="fa-solid fa-magnifying-glass text-4xl text-slate-600 mb-3"></i>
+            <p class="text-lg font-semibold text-slate-300">Không tìm thấy sản phẩm phù hợp</p>
+            <p class="text-sm text-slate-500 mt-1">Vui lòng thử từ khóa khác hoặc chuyển danh mục.</p>
+        </div>
+    </main>
+
+    <!-- TRUST & BENEFITS SECTION -->
+    <section id="benefits-section" class="py-12 bg-slate-900/60 border-t border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Tại Sao Nên Chọn AppVault?</h2>
+                <p class="text-sm text-slate-400 mt-2">Dịch vụ cung cấp tài khoản uy tín hàng đầu với chính sách rõ ràng.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 hover:border-purple-500/40 transition-all">
+                    <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Giao Hàng Tự Động 30s</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Hệ thống gửi thông tin tài khoản hoặc kích hoạt tự động qua Zalo/Email ngay khi giao dịch thành công.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 hover:border-purple-500/40 transition-all">
+                    <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-shield-check"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Bảo Hành 1 Đổi 1</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Cam kết bảo hành đầy đủ thời gian sử dụng. Đổi tài khoản mới ngay lập tức nếu gặp lỗi sự cố.</p>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border border-slate-800 hover:border-purple-500/40 transition-all">
+                    <div class="w-12 h-12 bg-pink-500/10 text-pink-400 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Hỗ Trợ Kỹ Thuật 24/7</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Đội ngũ hỗ trợ nhiệt tình qua Telegram & Zalo CSKH, giải đáp thắc mắc và hướng dẫn chi tiết.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section id="reviews-section" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+            <h2 class="text-2xl sm:text-3xl font-bold text-white">Đánh Giá Từ Khách Hàng</h2>
+            <p class="text-sm text-slate-400 mt-2">Hơn 15,000+ người dùng hài lòng với dịch vụ của chúng tôi.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm text-slate-300 italic mb-4">"Thuê Apple ID tải Minecraft với GTA Vice City siêu nhanh, đăng nhập vào App Store tải xong out ra vô cùng mượt. Rất uy tín!"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-sm">ND</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Nguyễn Minh Đức</h4>
+                        <span class="text-[11px] text-slate-400">Khách thuê Apple ID</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm text-slate-300 italic mb-4">"Mua Netflix 4K gói riêng tư dùng 6 tháng nay không bị out lần nào. Giá hạt dẻ hơn mua trực tiếp rất nhiều."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-pink-600 flex items-center justify-center text-white font-bold text-sm">TH</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Trần Thu Hà</h4>
+                        <span class="text-[11px] text-slate-400">Khách mua Netflix Extra</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-sm text-slate-300 italic mb-4">"Nâng cấp Canva Pro vào chính email cá nhân trong chưa đầy 1 phút. Làm slide thuyết trình cực kỳ tiện lợi."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-cyan-600 flex items-center justify-center text-white font-bold text-sm">LH</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Lê Hoàng Nam</h4>
+                        <span class="text-[11px] text-slate-400">Sinh viên Đại học</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800 pt-10 pb-6 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <span class="text-lg font-bold text-white">AppVault Premium</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">System cung cấp tài khoản ứng dụng bản quyền, Apple ID uy tín hàng đầu. Cam kết chất lượng & hỗ trợ nhanh chóng.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Liên Hệ Hỗ Trợ</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-purple-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-comment text-blue-400"></i> Zalo CSKH: 0988.XXX.XXX</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors flex items-center gap-2"><i class="fa-brands fa-telegram text-cyan-400"></i> Telegram Admin: @AppVaultCSKH</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors flex items-center gap-2"><i class="fa-brands fa-facebook text-indigo-400"></i> Fanpage: AppVault Premium Store</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Chính Sách</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Điều khoản dịch vụ</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Chính sách bảo hành 1 đổi 1</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">Hướng dẫn thanh toán QR</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-3">Hình Thức Thanh Toán</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 bg-slate-800 rounded border border-slate-700 text-[11px] text-slate-300">VietQR / MB Bank</span>
+                        <span class="px-2.5 py-1 bg-slate-800 rounded border border-slate-700 text-[11px] text-slate-300">MoMo QR</span>
+                        <span class="px-2.5 py-1 bg-slate-800 rounded border border-slate-700 text-[11px] text-slate-300">Thẻ cào tự động</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-6 text-center text-xs text-slate-500">
+                <p>&copy; 2026 AppVault Store. Tất cả quyền được bảo lưu. Thiết kế cho trải nghiệm mua sắm nhanh chóng.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md hidden transition-opacity">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div id="modalDetailContent">
+                <!-- Dynamic Content Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CART & CHECKOUT MODAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md hidden">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl">
+            <button onclick="toggleCartModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping text-purple-400"></i> Giỏ Hàng & Thanh Toán
+            </h3>
+
+            <!-- Cart Items List -->
+            <div id="cartItemsContainer" class="space-y-3 mb-6 max-h-48 overflow-y-auto pr-1">
+                <!-- JS Populated Items -->
+            </div>
+
+            <div class="border-t border-slate-800 pt-4 mb-6">
+                <div class="flex justify-between items-center text-base font-bold text-white">
+                    <span>Tổng tiền thanh toán:</span>
+                    <span id="cartTotalPrice" class="text-xl text-purple-400">0đ</span>
+                </div>
+            </div>
+
+            <!-- Customer Form -->
+            <form id="checkoutForm" onsubmit="handleCheckout(event)" class="space-y-4">
+                <h4 class="text-sm font-semibold text-slate-300 border-b border-slate-800 pb-2">Thông tin nhận tài khoản</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Họ và tên *</label>
+                        <input type="text" id="custName" required placeholder="Nguyễn Văn A" class="w-full bg-slate-800 text-sm text-white rounded-lg px-3 py-2 border border-slate-700 focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Số Zalo / Phone (Nhận pass) *</label>
+                        <input type="tel" id="custPhone" required placeholder="0901234567" class="w-full bg-slate-800 text-sm text-white rounded-lg px-3 py-2 border border-slate-700 focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Email nhận thông tin gói *</label>
+                    <input type="email" id="custEmail" required placeholder="example@gmail.com" class="w-full bg-slate-800 text-sm text-white rounded-lg px-3 py-2 border border-slate-700 focus:outline-none focus:border-purple-500">
+                </div>
+
+                <!-- Payment Method -->
+                <div class="mt-4">
+                    <label class="block text-xs text-slate-400 mb-2">Chọn phương thức thanh toán</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="border border-slate-700 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-purple-500 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/30 transition-all">
+                            <input type="radio" name="payMethod" value="vietqr" checked class="hidden">
+                            <i class="fa-solid fa-qrcode text-xl text-cyan-400 mb-1"></i>
+                            <span class="text-xs font-medium text-slate-200">VietQR Bank</span>
+                        </label>
+                        <label class="border border-slate-700 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-purple-500 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/30 transition-all">
+                            <input type="radio" name="payMethod" value="momo" class="hidden">
+                            <i class="fa-solid fa-wallet text-xl text-pink-400 mb-1"></i>
+                            <span class="text-xs font-medium text-slate-200">Ví MoMo</span>
+                        </label>
+                        <label class="border border-slate-700 rounded-xl p-3 flex flex-col items-center cursor-pointer hover:border-purple-500 has-[:checked]:border-purple-500 has-[:checked]:bg-purple-950/30 transition-all">
+                            <input type="radio" name="payMethod" value="card" class="hidden">
+                            <i class="fa-solid fa-credit-card text-xl text-amber-400 mb-1"></i>
+                            <span class="text-xs font-medium text-slate-200">Thẻ Cào</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-purple-600/30 transition-all">
+                    Xác Nhận & Tạo Mã Thanh Toán
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR PAYMENT SUCCESS MODAL -->
+    <div id="paymentModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-card bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 text-center relative shadow-2xl">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Quét Mã Thanh Toán Automaton</h3>
+            <p class="text-xs text-slate-400 mt-1">Hệ thống sẽ duyệt đơn tự động ngay khi nhận tiền</p>
+
+            <!-- Mock QR Image -->
+            <div class="my-4 bg-white p-3 rounded-xl inline-block shadow-inner">
+                <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=APPVAULT_SAMPLE" alt="Mã QR Thanh Toán" class="w-48 h-48 mx-auto">
+            </div>
+
+            <div class="bg-slate-800/80 rounded-xl p-3 text-left space-y-2 text-xs text-slate-300 border border-slate-700">
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Số tiền:</span>
+                    <span id="payAmount" class="font-bold text-emerald-400 text-sm">0đ</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Nội dung CK:</span>
+                    <span id="payMemo" class="font-bold text-amber-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-700">APPVAULT123</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Số tài khoản:</span>
+                    <span class="font-semibold text-white">0988888888 (MB BANK)</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Chủ tài khoản:</span>
+                    <span class="font-semibold text-white">APPVAULT STORE</span>
+                </div>
+            </div>
+
+            <div class="mt-4 flex gap-2">
+                <button onclick="copyMemo()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-copy mr-1"></i> Sao chép nội dung
+                </button>
+                <button onclick="finishOrder()" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-xs font-semibold text-white rounded-lg">
+                    <i class="fa-solid fa-check mr-1"></i> Đã hoàn tất CK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-800 text-white border border-purple-500/50 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMsg" class="text-sm font-medium">Thông báo ở đây</span>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // DATA PRODUCTS SAMPLE
+        const productsData = [
+            {
+                id: 1,
+                title: "Netflix Extra Member 4K UHD",
+                category: "entertainment",
+                type: "buy", // buy / rent
+                typeText: "Bán Tài Khoản",
+                price: 59000,
+                originalPrice: 90000,
+                period: "/ tháng",
+                rating: 5.0,
+                reviewsCount: 320,
+                icon: "fa-brands fa-netflix",
+                iconBg: "bg-red-600",
+                badge: "Hot Deal",
+                desc: "Tài khoản Profile riêng tư có mã PIN, chất lượng 4K HDR Ultra HD nét căng. Xem không gián đoạn trên Tivi, Điện thoại, PC.",
+                features: ["Profile riêng 1 người dùng", "Đặt PIN mã hóa riêng", "Xem 4K Ultra HD", "Bảo hành 1 đổi 1 trọn thời hạn"]
+            },
+            {
+                id: 2,
+                title: "Spotify Premium 1 Năm",
+                category: "entertainment",
+                type: "buy",
+                typeText: "Nâng Cấp Chính Chủ",
+                price: 199000,
+                originalPrice: 590000,
+                period: "/ 12 tháng",
+                rating: 4.9,
+                reviewsCount: 210,
+                icon: "fa-brands fa-spotify",
+                iconBg: "bg-emerald-500",
+                badge: "Tiết kiệm 70%",
+                desc: "Nâng cấp trực tiếp trên Email cá nhân chính chủ. Nghe nhạc chất lượng cao lossless, không quảng cáo, tải nhạc offline thoải mái.",
+                features: ["Nâng cấp trên Email chính chủ", "Không mất Playlist cũ", "Nghe nhạc 320kbps Lossless", "Bảo hành full 12 tháng"]
+            },
+            {
+                id: 3,
+                title: "Canva Pro Edu / Team",
+                category: "design",
+                type: "buy",
+                typeText: "Bản Quyền 1 Năm",
+                price: 89000,
+                originalPrice: 300000,
+                period: "/ 1 năm",
+                rating: 5.0,
+                reviewsCount: 450,
+                icon: "fa-solid fa-pen-nib",
+                iconBg: "bg-cyan-500",
+                badge: "Bán Chạy",
+                desc: "Full tính năng Pro: Xóa nền 1 click, mở khóa 100M+ hình ảnh & template cao cấp, resize thiết kế linh hoạt.",
+                features: ["Dùng trên Email chính chủ", "Mở khóa 100M+ Element Pro", "Công cụ AI Magic Write/Edit", "Bảo hành trọn thời hạn"]
+            },
+            {
+                id: 4,
+                title: "Thuê Apple ID Tải Minecraft PE + Shadowrocket",
+                category: "appleid",
+                type: "rent",
+                typeText: "Cho Thuê ID",
+                price: 15000,
+                originalPrice: 150000,
+                period: "/ lượt tải",
+                rating: 4.8,
+                reviewsCount: 180,
+                icon: "fa-brands fa-apple",
+                iconBg: "bg-slate-700",
+                badge: "Tải Nhanh",
+                desc: "Tài khoản Apple ID đã mua sẵn Game Minecraft Pocket Edition bản quyền + App VPN Shadowrocket. Đăng nhập App Store tải về máy vĩnh viễn.",
+                features: ["Tải chuẩn App Store chính chủ", "Không khóa máy (Chỉ nhập App Store)", "Hướng dẫn chi tiết kèm theo", "Đổi pass nếu lỗi"]
+            },
+            {
+                id: 5,
+                title: "CapCut Pro PC & Mobile",
+                category: "design",
+                type: "buy",
+                typeText: "Bán Gói Dùng Chung",
+                price: 49000,
+                originalPrice: 120000,
+                period: "/ 3 tháng",
+                rating: 4.9,
+                reviewsCount: 195,
+                icon: "fa-solid fa-video",
+                iconBg: "bg-slate-900",
+                badge: "Cực Rẻ",
+                desc: "Mở khóa mọi hiệu ứng Pro, Auto Caption chữ tự động tiếng Việt, xuất video 4K không logo watermark.",
+                features: ["Đăng nhập 1 thiết bị PC/Mobile", "Đầy đủ hiệu ứng VIP", "Xuất 4K 60fps mượt mà", "Bảo hành trong suốt gói"]
+            },
+            {
+                id: 6,
+                title: "ChatGPT Plus (GPT-4o)",
+                category: "work",
+                type: "buy",
+                typeText: "Tài Khoản Dùng Chung",
+                price: 99000,
+                originalPrice: 490000,
+                period: "/ tháng",
+                rating: 5.0,
+                reviewsCount: 510,
+                icon: "fa-solid fa-robot",
+                iconBg: "bg-teal-600",
+                badge: "AI Siêu Cấp",
+                desc: "Truy cập mô hình GPT-4o mạnh nhất, phân tích dữ liệu, tạo ảnh DALL-E 3, tốc độ phản hồi ưu tiên cực nhanh.",
+                features: ["Truy cập GPT-4o & GPT-4", "Tạo ảnh DALL-E 3 độc quyền", "Tốc độ nhanh gấp 5 lần free", "Bảo hành đổi mới nếu lỗi"]
+            },
+            {
+                id: 7,
+                title: "Thuê Apple ID Full App GoodNotes 6 + Notability",
+                category: "appleid",
+                type: "rent",
+                typeText: "Cho Thuê ID",
+                price: 25000,
+                originalPrice: 400000,
+                period: "/ lượt tải",
+                rating: 4.9,
+                reviewsCount: 130,
+                icon: "fa-solid fa-book-open",
+                iconBg: "bg-blue-600",
+                badge: "Học Tập",
+                desc: "Apple ID có sẵn bản quyền trọn đời GoodNotes 6 unlocked full tính năng ghi chú iPad & Notability VIP.",
+                features: ["Ghi chú không giới hạn sổ", "Đồng bộ iCloud cá nhân", "Tải 1 lần dùng mãi mãi", "Hỗ trợ iOS & iPadOS"]
+            },
+            {
+                id: 8,
+                title: "YouTube Premium Giá Rẻ",
+                category: "entertainment",
+                type: "buy",
+                typeText: "Gia Hạn Chính Chủ",
+                price: 35000,
+                originalPrice: 79000,
+                period: "/ tháng",
+                rating: 5.0,
+                reviewsCount: 680,
+                icon: "fa-brands fa-youtube",
+                iconBg: "bg-red-700",
+                badge: "Ưu Đãi",
+                desc: "Xem video không quảng cáo, phát nhạc trong nền tắt màn hình, bao gồm cả dịch vụ YouTube Music Premium.",
+                features: ["Tài khoản Email của bạn", "Tắt màn hình vẫn phát nhạc", "Tải video xem Offline", "Bảo hành uy tín"]
+            }
+        ];
+
+        // CART STATE
+        let cart = [];
+        let currentCategory = 'all';
+
+        // FORMAT CURRENCY
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        // RENDER PRODUCTS
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            const noRes = document.getElementById('noResults');
+
+            if (!items || items.length === 0) {
+                grid.innerHTML = '';
+                noRes.classList.remove('hidden');
+                return;
+            }
+
+            noRes.classList.add('hidden');
+            grid.innerHTML = items.map(p => `
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10 transition-all flex flex-col group">
+                    <div class="p-5 flex-grow">
+                        <div class="flex items-start justify-between gap-3 mb-4">
+                            <div class="w-12 h-12 ${p.iconBg} rounded-xl flex items-center justify-center text-white text-2xl shadow-md group-hover:scale-110 transition-transform">
+                                <i class="${p.icon}"></i>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${p.type === 'rent' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'bg-purple-500/10 text-purple-400 border border-purple-500/30'}">
+                                    ${p.typeText}
+                                </span>
+                                ${p.badge ? `<span class="text-[10px] text-pink-400 font-semibold mt-1"><i class="fa-solid fa-sparkles"></i> ${p.badge}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <h3 class="text-base font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-1">${p.title}</h3>
+                        
+                        <div class="flex items-center gap-1.5 text-xs text-amber-400 mt-1 mb-3">
+                            <i class="fa-solid fa-star"></i>
+                            <span class="font-bold text-slate-200">${p.rating}</span>
+                            <span class="text-slate-500">(${p.reviewsCount} đã bán)</span>
+                        </div>
+
+                        <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">${p.desc}</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/80 border-t border-slate-800/80 flex items-center justify-between gap-2 mt-auto">
+                        <div>
+                            <div class="text-xs text-slate-500 line-through">${formatVND(p.originalPrice)}</div>
+                            <div class="text-base font-extrabold text-purple-400">
+                                ${formatVND(p.price)}<span class="text-[10px] text-slate-400 font-normal">${p.period}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-1.5">
+                            <button onclick="openDetailModal(${p.id})" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors text-xs" title="Xem chi tiết">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button onclick="addToCart(${p.id})" class="px-3 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/30 flex items-center gap-1 transition-all">
+                                <i class="fa-solid fa-cart-plus"></i> Chọn
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // FILTER CATEGORY
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // update tab UI
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.classList.remove('bg-slate-800', 'text-slate-300');
+                    btn.classList.add('bg-purple-600', 'text-white');
+                } else {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-300');
+                }
+            });
+
+            if (category === 'all') {
+                renderProducts(productsData);
+            } else {
+                const filtered = productsData.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
+        }
+
+        // SEARCH HANDLE
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            executeSearch(query);
+        }
+
+        function handleMobileSearch() {
+            const query = document.getElementById('mobileSearchInput').value.toLowerCase().trim();
+            executeSearch(query);
+        }
+
+        function executeSearch(query) {
+            if (!query) {
+                filterCategory(currentCategory);
+                return;
+            }
+            const results = productsData.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                p.desc.toLowerCase().includes(query)
+            );
+            renderProducts(results);
+        }
+
+        // MODAL DETAIL
+        function openDetailModal(id) {
+            const item = productsData.find(p => p.id === id);
+            if (!item) return;
+
+            const modalContent = document.getElementById('modalDetailContent');
+            modalContent.innerHTML = `
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-14 h-14 ${item.iconBg} rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">${item.typeText}</span>
+                        <h3 class="text-xl font-bold text-white">${item.title}</h3>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/60 rounded-xl p-4 mb-4 border border-slate-700/60">
+                    <div class="flex justify-between items-baseline mb-2">
+                        <span class="text-xs text-slate-400">Giá ưu đãi đặc biệt:</span>
+                        <div>
+                            <span class="text-slate-500 line-through text-xs mr-2">${formatVND(item.originalPrice)}</span>
+                            <span class="text-xl font-extrabold text-purple-400">${formatVND(item.price)}</span>
+                            <span class="text-xs text-slate-400">${item.period}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">${item.desc}</p>
+                </div>
+
+                <div class="mb-6">
+                    <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Quyền lợi & Cam kết:</h4>
+                    <ul class="space-y-2">
+                        ${item.features.map(f => `
+                            <li class="flex items-center gap-2 text-xs text-slate-300">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> ${f}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="addToCart(${item.id}); closeDetailModal();" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        // CART LOGIC
+        function addToCart(id) {
+            const item = productsData.find(p => p.id === id);
+            if (!item) return;
+
+            const existing = cart.find(c => c.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Đã thêm "${item.title}" vào giỏ!`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(c => c.id !== id);
+            updateCartUI();
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.innerText = totalQty;
+
+            const container = document.getElementById('cartItemsContainer');
+            const totalElement = document.getElementById('cartTotalPrice');
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">Giỏ hàng của bạn đang trống.</p>`;
+                totalElement.innerText = formatVND(0);
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                return `
+                    <div class="flex items-center justify-between gap-3 bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
+                        <div class="flex items-center gap-2.5 flex-1 min-w-0">
+                            <div class="w-8 h-8 ${item.iconBg} rounded-lg flex items-center justify-center text-white text-sm shrink-0">
+                                <i class="${item.icon}"></i>
+                            </div>
+                            <div class="truncate">
+                                <h5 class="text-xs font-bold text-white truncate">${item.title}</h5>
+                                <span class="text-[11px] text-purple-400 font-semibold">${formatVND(item.price)}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="flex items-center border border-slate-700 rounded-lg overflow-hidden bg-slate-900">
+                                <button onclick="changeQty(${item.id}, -1)" class="px-2 py-0.5 text-xs text-slate-400 hover:text-white">-</button>
+                                <span class="px-2 text-xs font-bold text-white">${item.qty}</span>
+                                <button onclick="changeQty(${item.id}, 1)" class="px-2 py-0.5 text-xs text-slate-400 hover:text-white">+</button>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" class="text-slate-500 hover:text-red-400 text-xs p-1">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            totalElement.innerText = formatVND(total);
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // CHECKOUT HANDLE
+        function handleCheckout(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                showToast("Giỏ hàng đang trống!", "error");
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const memoCode = "AV" + Math.floor(100000 + Math.random() * 900000);
+
+            document.getElementById('payAmount').innerText = formatVND(total);
+            document.getElementById('payMemo').innerText = memoCode;
+
+            // Generate Mock QR URL
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PAY_APPVAULT_${memoCode}_${total}`;
+            document.getElementById('qrCodeImg').src = qrUrl;
+
+            toggleCartModal();
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function copyMemo() {
+            const memo = document.getElementById('payMemo').innerText;
+            navigator.clipboard.writeText(memo);
+            showToast("Đã sao chép nội dung chuyển khoản!");
+        }
+
+        function finishOrder() {
+            closePaymentModal();
+            cart = [];
+            updateCartUI();
+            showToast("Cảm ơn bạn! Hệ thống đang xử lý đơn hàng & gửi thông tin trong vài giây.", "success");
+        }
+
+        // TOAST NOTIFICATION
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+            if (type === "error") {
+                toastIcon.className = "fa-solid fa-circle-xmark text-red-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // SCROLL HELPER
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // INIT APP
+        window.onload = function() {
+            renderProducts(productsData);
+        };
+    </script>
+</body>
+</html>
